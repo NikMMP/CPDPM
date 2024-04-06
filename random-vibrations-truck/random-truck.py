@@ -2,6 +2,10 @@ import numpy
 import matplotlib
 import sys 
 import math
+import cmath
+
+POINTS = 100 
+DF = 0.5
 
 class Truck:
    def __init__(self, data):
@@ -22,7 +26,7 @@ class Truck:
 
      self.M = numpy.array([ [m ,0.0], [0.0, jd] ])
      self.K = numpy.array([ [ c1 + c2, c1 * b - c2 * (l-b)], [c1 * b - c2 * (l-b), c1 * pow(b,2) + c2 * pow(l-b,2)]]) 
-     self.C = numpy.array([ [ a1 + a2, a1 * b - a2 * (l - b)], [ a1 * b - a2 * (l - b), a1 * pow(b,2) + a2 * pow(l-b,2)]])
+     self.C = numpy.array([ [ a1 + a2, a1 * b - a2 * (l-b)], [a1 * b - a2 * (l-b), a1 * pow(b,2) + a2 * pow(l-b,2)]])
      self.K1 = numpy.array([ [c1, c2], [c1 * b, -c2 * (l - b)] ])
      self.C1 = numpy.array([ [a1, a2], [a1 * b, -a2 * (l - b)] ])
      self.T = l / v
@@ -30,10 +34,22 @@ class Truck:
 
    def input_psd(self, omega):
      return self.as1 * self.v / ( 2 * math.pi * (pow(omega,2) + self.bs1 * pow(self.v,2)))
+ 
+   def cross_psd(self, omega):
+     Sh = self.input_psd(omega)
+     factor = cmath.exp( 1j * omega * self.T)
+     S = numpy.array([[Sh,factor * Sh],[factor.conjugate() * Sh, Sh]]) 
+     return S
 
+   def transfer_function(self, omega):
+     s = 1j * omega
+     a = s * s * self.M + s * self.C + self.K
+     b = self.K1 + s * self.C1  
+     w = numpy.dot(numpy.linalg.inv(a), b)
+     return w
 
 if __name__ == "__main__":
-   print("Random Vibration Analysis:")
+##   print("Random Vibration Analysis:")
    data = {} ##contains input data for the analysis
 
    if len(sys.argv) >= 2:
@@ -49,30 +65,49 @@ if __name__ == "__main__":
         else:
           break
       truck = Truck(data)
-      print()
-      print("input PSD:")
-      for x in range(101):
-        omega = 2 * math.pi * x
+##      print()
+##      print("input PSD:")
+      for x in range(POINTS):
+        omega = 2 * math.pi * x * DF
         y = truck.input_psd(omega)
-        print(omega,y)
+##        print(omega,y)
       
-      print()
-      print("Natural frequencies, Hz:")
+      ##print()
+      ##print("Natural frequencies, Hz:")
 
       a = numpy.dot( numpy.linalg.inv(truck.M), truck.K)
       eigenvalues, eigenvectors = numpy.linalg.eig(a)
-      for eig in eigenvalues:
-        print(math.sqrt(eig) / (2 * math.pi))
+##      for eig in eigenvalues:
+##        print(math.sqrt(eig) / (2 * math.pi))
 
-      print()
-      print("Mode shapes in columns (normilized to mass matrix):")
+##      print()
+##      print("Mode shapes in columns (normilized to mass matrix):")
       norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
       num_vectors = eigenvectors.shape[1] 
       for i in range(num_vectors):
         eigenvectors[:,i] = eigenvectors[:,i] / math.sqrt(norm[i,i])
 
-      print(eigenvectors)
+##      print(eigenvectors)
       ###norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
       ####print(norm)
+      ###print(truck.K)
+
+##      print()
+##      print("PSD of the CG Displacement and Angle Displacement:")
+      for x in range(POINTS):
+        omega = 2 * math.pi * x * DF
+        S = truck.cross_psd(omega)
+        W = truck.transfer_function(omega)
+        iter = S.shape[1]
+        numbers = S.shape[0]
+
+        response = numpy.array([0 + 0.j,0 + 0.j])
+        for cur in range(numbers):
+          for j in range(iter):
+            for k in range(iter):
+              response[cur] += W[cur,j]*W[cur,k].conjugate() * S[j,k]
+
+        print(omega / (2 * math.pi), response[0].real, response[1].real)
+      
    else:
     print("no input file")
