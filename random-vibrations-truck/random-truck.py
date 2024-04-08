@@ -33,7 +33,8 @@ class Truck:
      self.v = v
 
    def input_psd(self, omega):
-     return self.as1 * self.v / ( 2 * math.pi * (pow(omega,2) + self.bs1 * pow(self.v,2)))
+###     return self.as1 * self.v / ( 2 * math.pi * (pow(omega,2) + self.bs1 * pow(self.v,2)))
+     return 2 * math.pi 
  
    def cross_psd(self, omega):
      Sh = self.input_psd(omega)
@@ -72,13 +73,13 @@ if __name__ == "__main__":
         y = truck.input_psd(omega)
 ##        print(omega,y)
       
-      ##print()
-      ##print("Natural frequencies, Hz:")
+      print()
+      print("Natural frequencies, Hz:")
 
       a = numpy.dot( numpy.linalg.inv(truck.M), truck.K)
       eigenvalues, eigenvectors = numpy.linalg.eig(a)
-##      for eig in eigenvalues:
-##        print(math.sqrt(eig) / (2 * math.pi))
+      for eig in eigenvalues:
+        print(math.sqrt(eig) / (2 * math.pi))
 
 ##      print()
 ##      print("Mode shapes in columns (normilized to mass matrix):")
