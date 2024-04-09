@@ -33,8 +33,7 @@ class Truck:
      self.v = v
 
    def input_psd(self, omega):
-###     return self.as1 * self.v / ( 2 * math.pi * (pow(omega,2) + self.bs1 * pow(self.v,2)))
-     return 2 * math.pi 
+     return self.as1 * self.v / ( 2 * math.pi * (pow(omega,2) + self.bs1 * pow(self.v,2)))
  
    def cross_psd(self, omega):
      Sh = self.input_psd(omega)
@@ -50,7 +49,8 @@ class Truck:
      return w
 
 if __name__ == "__main__":
-##   print("Random Vibration Analysis:")
+
+   print("Random Vibration Analysis:")
    data = {} ##contains input data for the analysis
 
    if len(sys.argv) >= 2:
@@ -65,50 +65,51 @@ if __name__ == "__main__":
        
         else:
           break
-      truck = Truck(data)
-##      print()
-##      print("input PSD:")
-      for x in range(POINTS):
-        omega = 2 * math.pi * x * DF
-        y = truck.input_psd(omega)
-##        print(omega,y)
+
+    truck = Truck(data)
+
+    print()
+    print("input PSD:")
+    for x in range(POINTS):
+      omega = 2 * math.pi * x * DF
+      y = truck.input_psd(omega)
+      print(omega,y)
       
-      print()
-      print("Natural frequencies, Hz:")
+    print()
+    print("Natural frequencies, Hz:")
 
-      a = numpy.dot( numpy.linalg.inv(truck.M), truck.K)
-      eigenvalues, eigenvectors = numpy.linalg.eig(a)
-      for eig in eigenvalues:
-        print(math.sqrt(eig) / (2 * math.pi))
+    a = numpy.dot( numpy.linalg.inv(truck.M), truck.K)
+    eigenvalues, eigenvectors = numpy.linalg.eig(a)
+    for eig in eigenvalues:
+      print(math.sqrt(eig) / (2 * math.pi))
 
-##      print()
-##      print("Mode shapes in columns (normilized to mass matrix):")
-      norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
-      num_vectors = eigenvectors.shape[1] 
-      for i in range(num_vectors):
-        eigenvectors[:,i] = eigenvectors[:,i] / math.sqrt(norm[i,i])
+    print()
+    print("Mode shapes in columns (normilized to mass matrix):")
+    norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
+    num_vectors = eigenvectors.shape[1] 
+    for i in range(num_vectors):
+      eigenvectors[:,i] = eigenvectors[:,i] / math.sqrt(norm[i,i])
 
-##      print(eigenvectors)
-      ###norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
-      ####print(norm)
-      ###print(truck.K)
+    print(eigenvectors)
+    norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
 
-##      print()
-##      print("PSD of the CG Displacement and Angle Displacement:")
-      for x in range(POINTS):
-        omega = 2 * math.pi * x * DF
-        S = truck.cross_psd(omega)
-        W = truck.transfer_function(omega)
-        iter = S.shape[1]
-        numbers = S.shape[0]
+    print()
+    print("PSD of the CG Displacement and Angle Displacement:")
 
-        response = numpy.array([0 + 0.j,0 + 0.j])
-        for cur in range(numbers):
-          for j in range(iter):
-            for k in range(iter):
-              response[cur] += W[cur,j]*W[cur,k].conjugate() * S[j,k]
+    for x in range(POINTS):
+      omega = 2 * math.pi * x * DF
+      S = truck.cross_psd(omega)
+      W = truck.transfer_function(omega)
+      iter = S.shape[1]
+      numbers = S.shape[0]
 
-        print(omega / (2 * math.pi), response[0].real, response[1].real)
+      response = numpy.array([0 + 0.j,0 + 0.j])
+      for cur in range(numbers):
+        for j in range(iter):
+          for k in range(iter):
+            response[cur] += W[cur,j]*W[cur,k].conjugate() * S[j,k]
+
+      print(omega / (2 * math.pi), response[0].real, response[1].real,response[0].imag,response[1].imag)
       
    else:
     print("no input file")
