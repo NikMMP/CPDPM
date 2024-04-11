@@ -3,6 +3,7 @@ import matplotlib
 import sys 
 import math
 import cmath
+import scipy
 
 POINTS = 100 
 DF = 0.5
@@ -73,7 +74,7 @@ if __name__ == "__main__":
     for x in range(POINTS):
       omega = 2 * math.pi * x * DF
       y = truck.input_psd(omega)
-      print(omega,y)
+      print("{:8.2f}{:12.6f}".format(omega,y))
       
     print()
     print("Natural frequencies, Hz:")
@@ -81,7 +82,7 @@ if __name__ == "__main__":
     a = numpy.dot( numpy.linalg.inv(truck.M), truck.K)
     eigenvalues, eigenvectors = numpy.linalg.eig(a)
     for eig in eigenvalues:
-      print(math.sqrt(eig) / (2 * math.pi))
+      print("{:8.2f}".format(math.sqrt(eig) / (2 * math.pi)))
 
     print()
     print("Mode shapes in columns (normilized to mass matrix):")
@@ -90,11 +91,20 @@ if __name__ == "__main__":
     for i in range(num_vectors):
       eigenvectors[:,i] = eigenvectors[:,i] / math.sqrt(norm[i,i])
 
-    print(eigenvectors)
+    #####print(eigenvectors)
+    for i in range(num_vectors):
+      for j in range(num_vectors):
+        sys.stdout.write("{:8.3f}".format(eigenvectors[i,j]))
+      sys.stdout.write("\n")
+
     norm = numpy.dot(eigenvectors.T,numpy.dot(truck.M, eigenvectors))
 
     print()
     print("PSD of the CG Displacement and Angle Displacement:")
+
+    u = [] 
+    v = [] 
+    phi = [] 
 
     for x in range(POINTS):
       omega = 2 * math.pi * x * DF
@@ -109,7 +119,24 @@ if __name__ == "__main__":
           for k in range(iter):
             response[cur] += W[cur,j]*W[cur,k].conjugate() * S[j,k]
 
-      print(omega / (2 * math.pi), response[0].real, response[1].real,response[0].imag,response[1].imag)
-      
+      u.append(omega)
+      v.append(response[0].real) 
+      phi.append(response[1].real)
+      print("{:4.2f}{:8.6f}{:8.6f}{:8.6f}{:8.6f}".format(omega / (2 * math.pi), response[0].real, response[1].real,response[0].imag,response[1].imag))
+
+    print()
+    print("input PSD rms:")
+    dispersia = scipy.integrate.quad(lambda x: truck.input_psd(x) / (2*math.pi), -numpy.inf, numpy.inf)
+    print(f"Input Dispersia: {dispersia[0]:.4f}")
+    print(f"Input RMS: {math.sqrt(dispersia[0]):.4f}")
+    print()
+    dispersia = scipy.integrate.simpson(v,x=u) / (2 * math.pi)
+    print(f"CofG Dispersia: {dispersia:.4f}")
+    print(f"CofG RMS: {math.sqrt(dispersia):.4f}")
+    print()
+    dispersia = scipy.integrate.simpson(phi,x=u) / ( 2 * math.pi)
+    print(f"Angle Dispersia: {dispersia:.4f}")
+    print(f"Angle RMS: {math.sqrt(dispersia):.4f}")
+
    else:
     print("no input file")

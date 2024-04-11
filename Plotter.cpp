@@ -249,7 +249,7 @@ int Plotter::allow_cursor_grid(){
     legend_move_action->setChecked(false);
     current_chart.update_legend() = legend_move_action->isChecked();
     update(); 
-    ////std::cout << " changed mode\n";
+    std::cout << " changed mode\n";
 }
 
 //------------------------------------------------------------------------------
