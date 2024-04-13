@@ -82,6 +82,12 @@ QMainWindow(parent)
           this,SLOT( allow_legend_action() ) 
          ); // connect create legend mode with action
 
+ connect(
+         truck_action, SIGNAL(triggered()),
+         this,
+         SLOT(run_truck_random_vibrations())
+         );
+
 }
 
 //------------------------------------------------------------------------
@@ -109,12 +115,14 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   mode_menu = new QMenu( tr("&Mode"));
 
   transformation_menu = new QMenu( tr("&Transformations"));
+  random_vibrations_menu = new QMenu(tr("&Random Vibrations"));
  
   menu_bar->addMenu(project_menu);
   menu_bar->addMenu(plots_menu);
   menu_bar->addMenu(axes_menu);
   menu_bar->addMenu(mode_menu);
   menu_bar->addMenu(transformation_menu);
+  menu_bar->addMenu(random_vibrations_menu);
 
   create_actions(); // create actions
 
@@ -140,6 +148,8 @@ int Plotter::create_menu(){ // think if there can be any exception throw
 
   transformation_menu->addAction(furie_transform_action);
   transformation_menu->addAction(laplas_transform_action);  
+
+  random_vibrations_menu->addAction(truck_action);
 
   return 0;
 }
@@ -172,8 +182,10 @@ int Plotter::create_actions(){
    legend_move_action->setCheckable(true);
 
 
-   furie_transform_action = new QAction(tr("Furie"), this);
+   furie_transform_action = new QAction(tr("Fourie"), this);
    laplas_transform_action = new QAction(tr("Laplas"), this);
+   
+   truck_action = new QAction( tr("&Truck Displacement"));
 
    return 0;
 }
@@ -425,4 +437,12 @@ int Plotter::open_project(){
    }
    
 return 0;
+}
+
+//-------------------------------------------------------------------------------------
+int Plotter::run_truck_random_vibrations(){
+      //std::cout << "Random truck displacement \n";
+      system("python ./random-vibrations-truck/random-truck.py ./random-vibrations-truck/truck.dat > ./random-vibrations-truck/random-vibrations-truck-results.dat"); 
+      system("echo Random Vibration Analysis Completed"); 
+      return 0;
 }

@@ -39,6 +39,8 @@ int allow_legend_action();
 int read_line_from_table();
 int rename_plot();
 
+int run_truck_random_vibrations();
+
 
 private:
 bool project_already_exist;
@@ -55,6 +57,8 @@ QMenu *axes_y_menu;
 
 QMenu *mode_menu;
 QMenu *transformation_menu;
+
+QMenu *random_vibrations_menu;
 
 QAction *create_project_action;
 QAction *open_project_action;
@@ -79,6 +83,8 @@ QAction *legend_move_action;
 
 QAction *furie_transform_action;
 QAction *laplas_transform_action;
+ 
+ QAction *truck_action;
  
 int create_menu();
 int create_actions();
