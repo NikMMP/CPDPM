@@ -130,10 +130,10 @@ return p;
 //-----------------------------------------------------------------------
 
 void Chart::paintEvent(QPaintEvent *event){
-
+        std::cout << "define painter\n";
      QPainter painter(this);
      calculate_origin();
-
+          std::cout << "painter defined\n";
        // draw X axis
        {
         painter.setPen( define_color(axes_x.color()) ); // should be defined based on the axis color property
@@ -306,7 +306,6 @@ void Chart::paintEvent(QPaintEvent *event){
          }
        }
 
-
    if (display_location &&
        cursor_location.y() >= Y_OFFSET &&  cursor_location.y() <= height() - Y_OFFSET &&
        cursor_location.x() >= X_OFFSET &&  cursor_location.x() <= width() - X_OFFSET
@@ -314,7 +313,6 @@ void Chart::paintEvent(QPaintEvent *event){
        //draw lines of the cursor position
        {
                    painter.save();
-                   
                    QPen pen;
                    pen.setStyle(Qt::DashLine);
                    pen.setWidth(DEFAULT_WIDTH);
@@ -331,7 +329,6 @@ void Chart::paintEvent(QPaintEvent *event){
                                     QPoint(width() - X_OFFSET, cursor_location.y())
                                     );
                    
-
                    Point p = convert_to_local_cs(cursor_location.x(), cursor_location.y());
                    QByteArray ba = QByteArray::number(p.x,'f',axes_x.accuracy());
 
@@ -355,7 +352,6 @@ void Chart::paintEvent(QPaintEvent *event){
                                      ); 
 
                    painter.restore(); 
-                              
        }
 
    if (new_legend_position &&
