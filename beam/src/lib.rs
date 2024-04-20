@@ -1,5 +1,7 @@
 use std::error::Error;
-use std::fs;
+use std::fs::File;
+use std::io::{self, BufRead};
+use std::path::Path;
 
 
 pub struct Config {
@@ -22,4 +24,9 @@ impl Config {
 pub fn run(config: Config) ->Result<(), Box<dyn Error>> {
     println!("read file: {}", config.file_path);
     Ok(())
+}
+
+pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> where P: AsRef<Path>, {
+     let file = File::open(filename)?;
+     Ok(io::BufReader::new(file).lines())
 }

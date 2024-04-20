@@ -5,7 +5,7 @@ use std::env;
 use std::process;
 
 use beam::Config;
-
+use std::collections::HashMap;
 
 fn main() {
        
@@ -15,15 +15,27 @@ fn main() {
                                                              process::exit(1);
                                                            }); 
 
-    if let Err(e) = beam::run(config) {
-       println!("Application error: {e}");
-       process::exit(1);
-    }
-    
-   let n: u32;
-   let EJ: f64 = 200000.0;
-   let m0: f64 = 500.;
+   let mut n: u32 = 1;
+   let EJ: f64 = 200000.0; 
+   let m0: f64 = 500.0 ;
    let l : f64 = 2.0;
+
+   let mut data = HashMap::new();
+
+   if let Ok(lines) = beam::read_lines(config.file_path) {
+
+      for line in lines.flatten() {
+          //println!("{}", line);
+          let words: Vec<&str> = line.split(',').collect();
+          data.insert(String::from(words[0]),String::from(words[1]));
+      }
+
+   }
+   
+   for (key, value) in &data {
+       println!("{key}: {value}");
+   } 
+    
    let pi: f64 = std::f64::consts::PI;
 
    let dx: f64 = 0.01;
