@@ -88,6 +88,12 @@ QMainWindow(parent)
          SLOT(run_truck_random_vibrations())
          );
 
+connect(
+         uniform_beam_action, SIGNAL(triggered()),
+         this,
+         SLOT(run_natural_modes_beam())
+         );
+
 }
 
 //------------------------------------------------------------------------
@@ -116,6 +122,7 @@ int Plotter::create_menu(){ // think if there can be any exception throw
 
   transformation_menu = new QMenu( tr("&Transformations"));
   random_vibrations_menu = new QMenu(tr("&Random Vibrations"));
+  uniform_beam_menu = new QMenu(tr("&Beam Vibrations"));
  
   menu_bar->addMenu(project_menu);
   menu_bar->addMenu(plots_menu);
@@ -123,6 +130,7 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   menu_bar->addMenu(mode_menu);
   menu_bar->addMenu(transformation_menu);
   menu_bar->addMenu(random_vibrations_menu);
+  menu_bar->addMenu(uniform_beam_menu);
 
   create_actions(); // create actions
 
@@ -150,7 +158,8 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   transformation_menu->addAction(laplas_transform_action);  
 
   random_vibrations_menu->addAction(truck_action);
-
+  uniform_beam_menu->addAction(uniform_beam_action);
+  
   return 0;
 }
 
@@ -186,7 +195,8 @@ int Plotter::create_actions(){
    laplas_transform_action = new QAction(tr("Laplas"), this);
    
    truck_action = new QAction( tr("&Truck Displacement"));
-
+   uniform_beam_action = new QAction(tr("&Natural Modes"));
+   
    return 0;
 }
 
@@ -444,5 +454,12 @@ int Plotter::run_truck_random_vibrations(){
       //std::cout << "Random truck displacement \n";
       system("python ./random-vibrations-truck/random-truck.py ./random-vibrations-truck/truck.dat > ./random-vibrations-truck/random-vibrations-truck-results.dat"); 
       system("echo Random Vibration Analysis Completed"); 
+      return 0;
+}
+
+//-------------------------------------------------------------------------------------
+int Plotter::run_natural_modes_beam(){
+      system("./beam/target/debug/beam  ./beam/beam_input.dat > ./beam/mode.dat"); 
+      system("echo Natural Mode Analysis Beam Completed"); 
       return 0;
 }

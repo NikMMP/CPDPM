@@ -40,7 +40,7 @@ int read_line_from_table();
 int rename_plot();
 
 int run_truck_random_vibrations();
-
+int run_natural_modes_beam();
 
 private:
 bool project_already_exist;
@@ -59,6 +59,8 @@ QMenu *mode_menu;
 QMenu *transformation_menu;
 
 QMenu *random_vibrations_menu;
+QMenu *uniform_beam_menu;
+
 
 QAction *create_project_action;
 QAction *open_project_action;
@@ -85,6 +87,7 @@ QAction *furie_transform_action;
 QAction *laplas_transform_action;
  
  QAction *truck_action;
+ QAction *uniform_beam_action;
  
 int create_menu();
 int create_actions();
