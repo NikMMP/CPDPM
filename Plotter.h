@@ -41,6 +41,8 @@ int rename_plot();
 
 int run_truck_random_vibrations();
 int run_natural_modes_beam();
+int run_gears_fatigue_analysis();
+
 
 private:
 bool project_already_exist;
@@ -60,7 +62,7 @@ QMenu *transformation_menu;
 
 QMenu *random_vibrations_menu;
 QMenu *uniform_beam_menu;
-
+QMenu *fatigue_menu;
 
 QAction *create_project_action;
 QAction *open_project_action;
@@ -88,6 +90,7 @@ QAction *laplas_transform_action;
  
  QAction *truck_action;
  QAction *uniform_beam_action;
+ QAction *gears_action;
  
 int create_menu();
 int create_actions();

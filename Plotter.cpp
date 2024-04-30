@@ -94,6 +94,11 @@ connect(
          SLOT(run_natural_modes_beam())
          );
 
+connect(
+         gears_action, SIGNAL(triggered()),
+         this,
+         SLOT(run_gears_fatigue_analysis())
+         );
 }
 
 //------------------------------------------------------------------------
@@ -123,7 +128,8 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   transformation_menu = new QMenu( tr("&Transformations"));
   random_vibrations_menu = new QMenu(tr("&Random Vibrations"));
   uniform_beam_menu = new QMenu(tr("&Beam Vibrations"));
- 
+  fatigue_menu = new QMenu(tr("&Fatigue"));
+   
   menu_bar->addMenu(project_menu);
   menu_bar->addMenu(plots_menu);
   menu_bar->addMenu(axes_menu);
@@ -131,7 +137,8 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   menu_bar->addMenu(transformation_menu);
   menu_bar->addMenu(random_vibrations_menu);
   menu_bar->addMenu(uniform_beam_menu);
-
+  menu_bar->addMenu(fatigue_menu);
+  
   create_actions(); // create actions
 
   project_menu->addAction(create_project_action);
@@ -159,6 +166,7 @@ int Plotter::create_menu(){ // think if there can be any exception throw
 
   random_vibrations_menu->addAction(truck_action);
   uniform_beam_menu->addAction(uniform_beam_action);
+  fatigue_menu->addAction(gears_action);
   
   return 0;
 }
@@ -196,6 +204,7 @@ int Plotter::create_actions(){
    
    truck_action = new QAction( tr("&Truck Displacement"));
    uniform_beam_action = new QAction(tr("&Natural Modes"));
+   gears_action = new QAction(tr("&Gears Fatigue Analysis"));
    
    return 0;
 }
@@ -452,14 +461,21 @@ return 0;
 //-------------------------------------------------------------------------------------
 int Plotter::run_truck_random_vibrations(){
       //std::cout << "Random truck displacement \n";
-      system("python ./random-vibrations-truck/random-truck.py ./random-vibrations-truck/truck.dat > ./random-vibrations-truck/random-vibrations-truck-results.dat"); 
+      system("python ./random-vibrations-truck/random-truck.py ./random-vibrations-truck/truck.dat > ./random-vibrations-truck/random-vibrations-truck-results.out"); 
       system("echo Random Vibration Analysis Completed"); 
       return 0;
 }
 
 //-------------------------------------------------------------------------------------
 int Plotter::run_natural_modes_beam(){
-      system("./beam/target/debug/beam  ./beam/beam_input.dat > ./beam/mode.dat"); 
+      system("./beam/target/debug/beam  ./beam/beam_input.dat > ./beam/mode.out"); 
       system("echo Natural Mode Analysis Beam Completed"); 
+      return 0;
+}
+
+//-------------------------------------------------------------------------------------
+int Plotter::run_gears_fatigue_analysis(){
+      system("./Fatigue/gears  ./Fatigue/input_gears.dat > ./Fatigue/gears_fatigue_analysis.out"); 
+      system("echo Gears Fatigue Analysis Completed"); 
       return 0;
 }
