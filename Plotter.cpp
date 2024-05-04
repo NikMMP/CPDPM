@@ -99,6 +99,13 @@ connect(
          this,
          SLOT(run_gears_fatigue_analysis())
          );
+
+connect(
+         shaft_action, SIGNAL(triggered()),
+         this,
+         SLOT(run_shaft_fatigue_analysis())
+         );
+
 }
 
 //------------------------------------------------------------------------
@@ -167,6 +174,7 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   random_vibrations_menu->addAction(truck_action);
   uniform_beam_menu->addAction(uniform_beam_action);
   fatigue_menu->addAction(gears_action);
+  fatigue_menu->addAction(shaft_action);
   
   return 0;
 }
@@ -205,6 +213,7 @@ int Plotter::create_actions(){
    truck_action = new QAction( tr("&Truck Displacement"));
    uniform_beam_action = new QAction(tr("&Natural Modes"));
    gears_action = new QAction(tr("&Gears Fatigue Analysis"));
+   shaft_action = new QAction(tr("&Aluminium Alloy Circular Shaft Fatigue Analysis"));
    
    return 0;
 }
@@ -477,5 +486,12 @@ int Plotter::run_natural_modes_beam(){
 int Plotter::run_gears_fatigue_analysis(){
       system("./Fatigue/gears  ./Fatigue/input_gears.dat > ./Fatigue/gears_fatigue_analysis.out"); 
       system("echo Gears Fatigue Analysis Completed"); 
+      return 0;
+}
+
+//-------------------------------------------------------------------------------------
+int Plotter::run_shaft_fatigue_analysis(){
+      system("./Fatigue/shaft  ./Fatigue/input_aluminium_shaft.dat > ./Fatigue/aluminium_alloy_circular_shaft_fatigue_analysis.out"); 
+      system("echo Aluminium Alloy Circular Shaft Fatigue Analysis Completed"); 
       return 0;
 }
