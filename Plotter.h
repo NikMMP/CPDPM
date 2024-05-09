@@ -43,6 +43,7 @@ int run_truck_random_vibrations();
 int run_natural_modes_beam();
 int run_gears_fatigue_analysis();
 int run_shaft_fatigue_analysis();
+int run_rainflow_algorithm();
 
 
 private:
@@ -92,7 +93,8 @@ QAction *laplas_transform_action;
  QAction *truck_action;
  QAction *uniform_beam_action;
  QAction *gears_action;
-QAction *shaft_action;
+ QAction *shaft_action;
+ QAction *rainflow_action;
  
 int create_menu();
 int create_actions();

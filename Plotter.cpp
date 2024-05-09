@@ -106,6 +106,12 @@ connect(
          SLOT(run_shaft_fatigue_analysis())
          );
 
+connect(
+         rainflow_action, SIGNAL(triggered()),
+         this,
+         SLOT(run_rainflow_algorithm())
+         );
+
 }
 
 //------------------------------------------------------------------------
@@ -175,6 +181,7 @@ int Plotter::create_menu(){ // think if there can be any exception throw
   uniform_beam_menu->addAction(uniform_beam_action);
   fatigue_menu->addAction(gears_action);
   fatigue_menu->addAction(shaft_action);
+  fatigue_menu->addAction(rainflow_action);
   
   return 0;
 }
@@ -214,6 +221,7 @@ int Plotter::create_actions(){
    uniform_beam_action = new QAction(tr("&Natural Modes"));
    gears_action = new QAction(tr("&Gears Fatigue Analysis"));
    shaft_action = new QAction(tr("&Aluminium Alloy Circular Shaft Fatigue Analysis"));
+   rainflow_action = new QAction(tr("&Rainflow Algorithm"));
    
    return 0;
 }
@@ -493,5 +501,12 @@ int Plotter::run_gears_fatigue_analysis(){
 int Plotter::run_shaft_fatigue_analysis(){
       system("./Fatigue/shaft  ./Fatigue/input_aluminium_shaft.dat > ./Fatigue/aluminium_alloy_circular_shaft_fatigue_analysis.out"); 
       system("echo Aluminium Alloy Circular Shaft Fatigue Analysis Completed"); 
+      return 0;
+}
+
+//-------------------------------------------------------------------------------------
+int Plotter::run_rainflow_algorithm(){
+      system("./Fatigue/rainflow  ./Fatigue/input_sigma.dat > ./Fatigue/rainflow_algorithm.out"); 
+      system("echo Rainflow Algorithm Analysis Completed"); 
       return 0;
 }
