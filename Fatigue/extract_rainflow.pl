@@ -13,6 +13,6 @@ use autodie;
  
     while (<fh>) {
     my @words = split /\s+/,$_;
-    print $words[1] . "," . $words[2] . "," . $words[3] , ".\n";
+    print $words[1] . "," . $words[2] . "," . $words[3] , ",\n";
     }
     close(fh);
