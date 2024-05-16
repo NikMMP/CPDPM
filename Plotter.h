@@ -44,6 +44,7 @@ int run_natural_modes_beam();
 int run_gears_fatigue_analysis();
 int run_shaft_fatigue_analysis();
 int run_rainflow_algorithm();
+int run_damage_analysis();
 
 
 private:
@@ -95,6 +96,7 @@ QAction *laplas_transform_action;
  QAction *gears_action;
  QAction *shaft_action;
  QAction *rainflow_action;
+ QAction *damage_action;
  
 int create_menu();
 int create_actions();
