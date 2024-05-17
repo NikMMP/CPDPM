@@ -13,6 +13,7 @@
          integer file_unit
          integer info, lwork
          integer, parameter :: dim = 6
+         integer, parameter :: block_size = 512
          integer IPIV(dim)
          double precision D(dim, dim), work(dim)
          double precision INV_D(dim, dim)
@@ -73,7 +74,9 @@
           write(*,*)
 
           call dgetrf(dim, dim, INV_D, dim, IPIV, info)
-
+          lwork = block_size 
+          call dgetri(dim, INV_D, dim, IPIV, work, lwork, info)
+cccc      matrix INV_D contains stiffnesses lambda for the effective characteristic calculations
           if (info .eq. 0) then  
               call print_matrix(dim, INV_D)
           else
